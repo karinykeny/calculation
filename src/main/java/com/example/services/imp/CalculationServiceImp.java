@@ -1,14 +1,16 @@
 package com.example.services.imp;
 
 import com.example.domain.DataCalculation;
-import com.example.domain.Result;
 import com.example.domain.FinancingType;
+import com.example.domain.Result;
 import com.example.services.CalculationService;
 import com.example.tools.MessageProperty;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -27,16 +29,16 @@ import java.util.List;
 public class CalculationServiceImp implements CalculationService {
 
     private static final String FILENAME = "src/main/resources/CalculosFile.xls";
+    private static final Logger logger = LoggerFactory.getLogger(CalculationService.class);
 
     @Override
     public Result calculateMonthlyInstallment(DataCalculation dataCalculation) {
-
-        Assert.isTrue((dataCalculation.getFinancingType().equals(FinancingType.INTERNAL)
-                        && dataCalculation.getNumberMonthlyPayments() <= 48)
-                        || (dataCalculation.getFinancingType().equals(FinancingType.EXTERNAL)),
-                MessageProperty.getMessage(MessageProperty.MESSAGE_ERROR_TYPE_INTERNAL));
-
         try {
+            Assert.isTrue((dataCalculation.getFinancingType().equals(FinancingType.INTERNAL)
+                            && dataCalculation.getNumberMonthlyPayments() <= 48)
+                            || (dataCalculation.getFinancingType().equals(FinancingType.EXTERNAL)),
+                    MessageProperty.getMessage(MessageProperty.MESSAGE_ERROR_TYPE_INTERNAL));
+
             Double result = dataCalculation.getVehicleValue().add(dataCalculation.getVehicleValue()
                     .multiply(new BigDecimal(dataCalculation.getFinancingType().getIncrement())))
                     .divide(BigDecimal.valueOf(dataCalculation.getNumberMonthlyPayments()),2, RoundingMode.HALF_UP)
@@ -44,6 +46,7 @@ public class CalculationServiceImp implements CalculationService {
             return new Result(result, dataCalculation);
 
         } catch (Exception ex) {
+            logger.error(ex.getMessage());
             throw new RuntimeException(ex.getMessage());
         }
     }
@@ -71,10 +74,10 @@ public class CalculationServiceImp implements CalculationService {
             return MessageProperty.getMessage(MessageProperty.MESSAGE_SAVE_SUCCESS);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return MessageProperty.getMessage(MessageProperty.MESSAGE_NOT_FOUND);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return MessageProperty.getMessage(MessageProperty.MESSAGE_ERROR_EDIT);
         }
     }
@@ -121,6 +124,7 @@ public class CalculationServiceImp implements CalculationService {
             }
             file.close();
         } catch (Exception ex) {
+            logger.error(ex.getMessage());
             throw new FileNotFoundException(ex.getMessage());
         }
         return resultList;

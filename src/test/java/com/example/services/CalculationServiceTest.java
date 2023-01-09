@@ -8,6 +8,7 @@ import com.example.tools.MessageProperty;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 
@@ -20,7 +21,7 @@ public class CalculationServiceTest {
         Result resultado = this.service.calculateMonthlyInstallment(getCanculationBasis());
         Assert.assertNotNull(resultado);
         Assert.assertNotNull(resultado.getInstallment());
-        Assert.assertEquals(new Double(13.3125),resultado.getInstallment());
+        Assert.assertEquals(new Double(13.31),resultado.getInstallment());
     }
 
     @Test
