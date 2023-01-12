@@ -9,6 +9,13 @@
 <main class="container d-flex align-items-center justify-content-center" style="height: 100vh">
     <div class="m-3 shadow-lg bg-body rounded p-3" style="min-width: 380px; min-height: 400px">
         <form th:object="${formResult}" th:action="@{/simulacao}" method="POST">
+            <div th:each="m:${msg}" class="pb-8" style="width: 350px" >
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <span th:text="${m}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
             <div class="my-4">
                 <div class="mb-3">
                     <label class="form-label">Tipo de Financiamento</label>

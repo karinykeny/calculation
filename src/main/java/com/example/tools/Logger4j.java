@@ -13,8 +13,8 @@ public  class Logger4j {
     private static final Properties PROPERTIES = new Properties();
     private static final String LOG_FILE = "log4j.properties";
 
-    public static void logger() throws IOException {
-        Logger LOGGER = Logger.getLogger(DataCalculation.class);
+    public static void logger(Class<?> classLogger) throws IOException {
+        Logger LOGGER = Logger.getLogger(classLogger);
         PROPERTIES.load(new FileInputStream(LOG_FILE));
         PropertyConfigurator.configure(PROPERTIES);
     }

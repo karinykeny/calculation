@@ -1,9 +1,13 @@
 package com.example.domain;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class Result {
+
+    @NotNull(message = "Nome obrigatório!")
     private String name;
+    @NotNull(message = "Contato obrigatório!")
     private String contact;
     private Double installment;
     private String financingType;
